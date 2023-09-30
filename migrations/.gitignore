@@ -1,0 +1,4 @@
+# Files represents migrations with mysql
+/Version/*.php
+/Version/*.sql
+/Version/*.sql.gz
