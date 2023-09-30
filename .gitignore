@@ -1,3 +1,6 @@
+###> symfony/doctrine ###
+/migrations/
+###< symfony/doctrine ###
 
 ###> symfony/framework-bundle ###
 .env.local
@@ -11,13 +14,9 @@
 
 ###> phpunit/phpunit ###
 /phpunit.xml
+/phpunit.xml.dist
 .phpunit.result.cache
 ###< phpunit/phpunit ###
-
-###> symfony/phpunit-bridge ###
-.phpunit.result.cache
-/phpunit.xml
-###< symfony/phpunit-bridge ###
 
 ###> symfony/webpack-encore-bundle ###
 /node_modules/
@@ -36,6 +35,8 @@ yarn-error.log
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
 # User-specific stuff
+.idea/
+.idea/workspace.xml
 .idea/**/workspace.xml
 .idea/**/tasks.xml
 .idea/**/usage.statistics.xml
@@ -263,3 +264,7 @@ fabric.properties
 # End of https://www.toptal.com/developers/gitignore/api/symfony,phpstorm,phpstorm+all
 
 
+
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
