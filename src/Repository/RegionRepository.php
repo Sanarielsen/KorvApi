@@ -21,6 +21,20 @@ class RegionRepository extends ServiceEntityRepository
         parent::__construct($registry, Region::class);
     }
 
+    /**
+     * @return bool Returns if you have exists region informed
+     */
+    public function findOneByIdExists(int $id): bool
+    {
+        $regionResult = $this->createQueryBuilder('region')
+            ->andWhere('region.id = :id')
+            ->setParameter('id', $id)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+
+        return count($regionResult) > 0 && $regionResult[0]->getId() === $id;
+    }
 //    /**
 //     * @return Region[] Returns an array of Region objects
 //     */
