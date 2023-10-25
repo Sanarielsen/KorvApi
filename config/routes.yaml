@@ -9,3 +9,30 @@ api_login_check:
 
 dashboard_check:
   path: /dashboard
+
+korv_region_create:
+  path: /region
+  controller: App\Controller\RegionController::postRegion
+  methods: POST
+
+korv_region_put:
+  path: /region/{id}
+  controller: App\Controller\RegionController::putRegion
+  methods: PUT
+
+korv_region_get:
+  path: /regions
+  controller: App\Controller\RegionController::getRegion
+  methods: GET
+
+korv_region_get_with_id:
+  path: /region/{id}
+  controller: App\Controller\RegionController::getRegionWithId
+  methods: GET
+
+korv_region_delete:
+  path: /region
+  controller: App\Controller\RegionController::deleteRegion
+  methods: DELETE
+
+
