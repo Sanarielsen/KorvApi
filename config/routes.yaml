@@ -9,3 +9,10 @@ api_login_check:
 
 dashboard_check:
   path: /dashboard
+
+korv_region_put:
+  path: /region/{id}
+  controller: App\Controller\RegionController::putRegion
+  methods: PUT
+
+
