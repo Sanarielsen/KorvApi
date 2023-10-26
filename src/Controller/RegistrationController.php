@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Security\EmailVerifier;
+use App\Security\UserAuthenticatedVerifier;
 use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,16 +18,23 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends AbstractController
 {
+    private UserAuthenticatedVerifier $userAuthenticatedVerifier;
     private EmailVerifier $emailVerifier;
 
-    public function __construct(EmailVerifier $emailVerifier)
+    public function __construct(UserAuthenticatedVerifier $userAuthenticatedVerifier, EmailVerifier $emailVerifier)
     {
+        $this->userAuthenticatedVerifier = $userAuthenticatedVerifier;
         $this->emailVerifier = $emailVerifier;
     }
 
-    #[Route('/register', name: 'app_register')]
+    #[Route('/register', name: 'app_register', methods: 'POST')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): JsonResponse
     {
+        $hasAccess = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
+        if (!$hasAccess) {
+            return $this->json(['status' => '401', 'message' => 'Usuário não permitido para essa sessão.'], 401, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+
         try {
             $user = new User();
             $resultJson = json_decode($request->getContent(), true);
