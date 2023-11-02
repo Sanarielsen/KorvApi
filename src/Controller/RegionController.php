@@ -14,7 +14,7 @@ use function PHPUnit\Framework\isEmpty;
 
 class RegionController extends AbstractController
 {
-    #[Route('/region', name: 'korv_region_create')]
+    #[Route('/region', name: 'korv_region_create', methods: "POST")]
     public function index(Request $request, EntityManagerInterface $entityManager): Response
     {
         $requestJSON = json_decode($request->getContent(), true);
@@ -49,5 +49,25 @@ class RegionController extends AbstractController
         $entityManager->flush();
 
         return $this->json(['status' => '200', 'message' => 'Região atualizada com sucesso.'], 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
+
+    #[Route('/region', name: 'korv_region_delete', methods: 'DELETE')]
+    public function deleteRegion(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $resultJson = json_decode($request->getContent(), true);
+        if ( !is_array($resultJson) || !array_key_exists("id", $resultJson)) {
+            return $this->json(['status' => '422'], 422, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+        $regionExists = $entityManager->getRepository(Region::class)->findOneByIdExists($resultJson["id"]);
+        if (!$regionExists) {
+            return $this->json(['status' => '404'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+
+        $region = $entityManager->getRepository(Region::class)->find($resultJson["id"]);
+
+        $entityManager->remove($region);
+        $entityManager->flush();
+
+        return $this->json(['status' => '200', 'message' => 'Região excluída com sucesso.'], 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
 }
