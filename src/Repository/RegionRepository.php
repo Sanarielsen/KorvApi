@@ -24,31 +24,16 @@ class RegionRepository extends ServiceEntityRepository
     /**
      * @return bool Returns if you have exists region informed
      */
-    public function findOneByIdExists(int $id): bool
+    public function findOneByIdExists(int $id): array
     {
-        $regionResult = $this->createQueryBuilder('region')
+        return $this->createQueryBuilder('region')
             ->andWhere('region.id = :id')
             ->setParameter('id', $id)
             ->setMaxResults(1)
             ->getQuery()
             ->getResult();
-
-        return count($regionResult) > 0 && $regionResult[0]->getId() === $id;
     }
 
-    public function deleteCurrentRegion(int $id): bool
-    {
-        $regionDelete = $this->createQueryBuilder('Region')
-            ->delete('Region', 'region')
-            ->where('region.id = :id')
-            ->setParameter(':id', $id)
-            ->getQuery()
-            ->getResult();
-
-        var_dump($regionDelete);
-
-        return true;
-    }
 //    /**
 //     * @return Region[] Returns an array of Region objects
 //     */
