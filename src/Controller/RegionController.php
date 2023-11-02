@@ -55,7 +55,10 @@ class RegionController extends AbstractController
     public function deleteRegion(Request $request, EntityManagerInterface $entityManager): Response
     {
         $resultJson = json_decode($request->getContent(), true);
-        if ( !is_array($resultJson) || !array_key_exists("id", $resultJson)) {
+        if ( !is_array($resultJson) ) {
+            return $this->json(['status' => '422'], 422, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+        if (!array_key_exists("id", $resultJson)) {
             return $this->json(['status' => '422'], 422, ['Content-Type'=>'application/json; charset=utf-8']);
         }
         $regionExists = $entityManager->getRepository(Region::class)->findOneByIdExists($resultJson["id"]);
@@ -77,5 +80,16 @@ class RegionController extends AbstractController
         $regions = $entityManager->getRepository(Region::class)->findAll();
 
         return $this->json($regions, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
+
+    #[Route('/region/{id}', name: 'korv_region_get_with_id', methods: 'GET')]
+    public function getRegionWithId(EntityManagerInterface $entityManager, int $id) : Response
+    {
+        $currentRegion = $entityManager->getRepository(Region::class)->find($id);
+        if (!$currentRegion) {
+            return $this->json(['status' => '404'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+
+        return $this->json($currentRegion, 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
 }
