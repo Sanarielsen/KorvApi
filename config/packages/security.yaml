@@ -24,4 +24,5 @@ security:
   access_control:
     - { path: ^/api/login_check, roles: PUBLIC_ACCESS }
     - { path: ^/register,        roles: IS_AUTHENTICATED_FULLY }
-    - { path: ^/region/:id,     roles: ['KORV_ADMIN', 'EMPLOYEE'] }
+    - { path: ^/region/:id,      roles: ['KORV_ADMIN', 'EMPLOYEE'] }
+    - { path: ^/regions,         roles: IS_AUTHENTICATED_FULLY }
