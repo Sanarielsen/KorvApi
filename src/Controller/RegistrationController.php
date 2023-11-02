@@ -28,11 +28,11 @@ class RegistrationController extends AbstractController
     }
 
     #[Route('/register', name: 'app_register', methods: 'POST')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): JsonResponse
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $hasAccess = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
-        if (!$hasAccess) {
-            return $this->json(['status' => '401', 'message' => 'Usuário não permitido para essa sessão.'], 401, ['Content-Type'=>'application/json; charset=utf-8']);
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
         }
 
         try {
@@ -48,12 +48,8 @@ class RegistrationController extends AbstractController
             );
             $user->setRoles($resultJson["roles"]);
 
-            $userParams = get_object_vars($user);
-            if ( count($userParams) <= 3 ) {
-                return $this->json(['status' => '400', 'message' => 'Erro ao prosseguir com esse cadastro. Preencha todos os campos para prosseguir o cadastro'], 200, ['Content-Type'=>'application/json; charset=utf-8']);
-            }
             $userFound = $entityManager->getRepository(User::class)->findUserByEmail($user->getEmail());
-            if ( $userFound > 0 ) {
+            if ( $userFound !== [] ) {
                 return $this->json(['status' => '400', 'message' => 'Erro ao prosseguir com esse cadastro. Existem alguns campos que não passaram na validação do cadastro'], 200, ['Content-Type'=>'application/json; charset=utf-8']);
             }
 
