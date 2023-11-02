@@ -15,4 +15,9 @@ korv_region_put:
   controller: App\Controller\RegionController::putRegion
   methods: PUT
 
+korv_region_delete:
+  path: /region
+  controller: App\Controller\RegionController::deleteRegion
+  methods: DELETE
+
 

@@ -35,6 +35,20 @@ class RegionRepository extends ServiceEntityRepository
 
         return count($regionResult) > 0 && $regionResult[0]->getId() === $id;
     }
+
+    public function deleteCurrentRegion(int $id): bool
+    {
+        $regionDelete = $this->createQueryBuilder('Region')
+            ->delete('Region', 'region')
+            ->where('region.id = :id')
+            ->setParameter(':id', $id)
+            ->getQuery()
+            ->getResult();
+
+        var_dump($regionDelete);
+
+        return true;
+    }
 //    /**
 //     * @return Region[] Returns an array of Region objects
 //     */
