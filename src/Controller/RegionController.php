@@ -70,4 +70,12 @@ class RegionController extends AbstractController
 
         return $this->json(['status' => '200', 'message' => 'Região excluída com sucesso.'], 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
+
+    #[Route('/regions', name: 'korv_region_get', methods: 'GET')]
+    public function getRegion(EntityManagerInterface $entityManager) : Response
+    {
+        $regions = $entityManager->getRepository(Region::class)->findAll();
+
+        return $this->json($regions, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
 }
