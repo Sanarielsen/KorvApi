@@ -110,4 +110,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
+
+    public function fromArray(array $attributes) : string
+    {
+        foreach ($attributes as $name => $value) {
+            if (property_exists($this, $name)) {
+                $methodName = $this->_getSetterName($name);
+                if ($methodName) {
+                    $this->{$methodName}($value);
+                } else {
+                    $this->$name = $value;
+                }
+            }
+        }
+    }
+
+    protected function _getSetterName($propertyName): string|bool
+    {
+        $prefixes = array('add', 'set');
+
+        foreach ($prefixes as $prefix) {
+            $methodName = sprintf('%s%s', $prefix, ucfirst(strtolower($propertyName)));
+
+            if (method_exists($this, $methodName)) {
+                return $methodName;
+            }
+        }
+        return false;
+    }
 }
