@@ -7,19 +7,9 @@ security:
         class: App\Entity\User
         property: email
   firewalls:
-    api_login:
-      pattern: ^/api/login
-      stateless: true
+    korv_login:
       json_login:
-        provider: memory_database_users
-        check_path: /api/login_check
-        success_handler: lexik_jwt_authentication.handler.authentication_success
-        failure_handler: lexik_jwt_authentication.handler.authentication_failure
-    api:
-      pattern: ^/
-      stateless: true
-      jwt:
-        provider: memory_database_users
+        check_path: /login
 
   access_control:
     - { path: ^/api/login_check, roles: PUBLIC_ACCESS }

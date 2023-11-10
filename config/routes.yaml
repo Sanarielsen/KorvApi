@@ -4,6 +4,16 @@ controllers:
     namespace: App\Controller
   type: attribute
 
+korv_login:
+  path: /login
+  controller: App\Controller\LoginController::login
+  methods: POST
+
+korv_logout:
+  path: /logout
+  controller: App\Controller\LoginController::logout
+  methods: POST
+
 api_login_check:
   path: /api/login_check
 
