@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -17,6 +18,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?int $id = null;
 
+    #[ORM\Column(length: 120)]
+    private ?string $name = null;
+
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -30,11 +34,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $password = null;
 
     #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
+    private bool $isVerified = false;
+
+    #[ORM\Column]
+    private ?bool $activated = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeInterface $createdAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE)]
+    private ?\DateTimeInterface $lastLoginAt = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
     }
 
     public function getEmail(): ?string
@@ -111,31 +136,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function fromArray(array $attributes) : string
+    public function isActivated(): ?bool
     {
-        foreach ($attributes as $name => $value) {
-            if (property_exists($this, $name)) {
-                $methodName = $this->_getSetterName($name);
-                if ($methodName) {
-                    $this->{$methodName}($value);
-                } else {
-                    $this->$name = $value;
-                }
-            }
-        }
+        return $this->activated;
     }
 
-    protected function _getSetterName($propertyName): string|bool
+    public function setActivated(bool $activated): static
     {
-        $prefixes = array('add', 'set');
+        $this->activated = $activated;
 
-        foreach ($prefixes as $prefix) {
-            $methodName = sprintf('%s%s', $prefix, ucfirst(strtolower($propertyName)));
+        return $this;
+    }
 
-            if (method_exists($this, $methodName)) {
-                return $methodName;
-            }
-        }
-        return false;
+    public function getCreatedAt(): ?\DateTimeInterface
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(\DateTimeInterface $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    public function getLastLoginAt(): ?\DateTimeInterface
+    {
+        return $this->lastLoginAt;
+    }
+
+    public function setLastLoginAt(\DateTimeInterface $lastLoginAt): static
+    {
+        $this->lastLoginAt = $lastLoginAt;
+
+        return $this;
     }
 }

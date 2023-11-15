@@ -20,6 +20,31 @@ api_login_check:
 dashboard_check:
   path: /dashboard
 
+korv_user_create:
+  path: /user
+  controller: App\Controller\UserController::postUser
+  methods: POST
+
+korv_user_get:
+  path: /users
+  controller: App\Controller\UserController::getUsers
+  methods: GET
+
+korv_user_get_with_id:
+  path: /user/{id}
+  controller: App\Controller\UserController::getUserWithId
+  methods: GET
+
+korv_user_put:
+    path: /user/{id}
+    controller: App\Controller\UserController::putUser
+    methods: PUT
+
+korv_user_put_status:
+    path: /user/{id}/status
+    controller: App\Controller\UserController::putUserStatus
+    methods: PUT
+
 korv_region_create:
   path: /region
   controller: App\Controller\RegionController::postRegion
