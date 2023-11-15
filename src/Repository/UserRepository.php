@@ -51,28 +51,23 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
-//    /**
-//     * @return User[] Returns an array of User objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('u.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    public function findAllUsersWithoutPassword(): array
+    {
+        return $this->createQueryBuilder('user')
+            ->select('user.id, user.name, user.email, user.roles, user.activated, user.createdAt, user.lastLoginAt')
+            ->orderBy('user.createdAt', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
-//    public function findOneBySomeField($value): ?User
-//    {
-//        return $this->createQueryBuilder('u')
-//            ->andWhere('u.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findUserWithoutPassword(int $id): mixed
+    {
+        return $this->createQueryBuilder('user')
+            ->select('user.id, user.name, user.email, user.roles, user.activated, user.createdAt, user.lastLoginAt')
+            ->andWhere('user.id = :id')
+            ->setParameter(':id', $id)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
 }
