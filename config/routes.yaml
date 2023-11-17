@@ -35,6 +35,11 @@ korv_user_get_with_id:
   controller: App\Controller\UserController::getUserWithId
   methods: GET
 
+korv_user_put:
+    path: /user/{id}
+    controller: App\Controller\UserController::putUser
+    methods: PUT
+
 korv_region_create:
   path: /region
   controller: App\Controller\RegionController::postRegion
