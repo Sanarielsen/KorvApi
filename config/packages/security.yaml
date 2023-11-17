@@ -15,6 +15,7 @@ security:
     - { path: ^/login, roles: PUBLIC_ACCESS }
     - { path: ^/user,            roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/user/:id,        roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/user/:id/status, roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/users,           roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/region,          roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/region/:id,      roles: IS_AUTHENTICATED_FULLY }

@@ -40,6 +40,11 @@ korv_user_put:
     controller: App\Controller\UserController::putUser
     methods: PUT
 
+korv_user_put_status:
+    path: /user/{id}/status
+    controller: App\Controller\UserController::putUserStatus
+    methods: PUT
+
 korv_region_create:
   path: /region
   controller: App\Controller\RegionController::postRegion
