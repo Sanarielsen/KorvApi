@@ -33,8 +33,12 @@ class UserController extends AbstractController
         try {
             $user = new User();
             $resultJson = json_decode($request->getContent(), true);
+            if ( count($resultJson) < 4 ) {
+                return $this->json(['status' => '400', 'message' => 'Erro ao prosseguir com esse cadastro. Existem alguns campos que não passaram na validação do cadastro'], 200, ['Content-Type'=>'application/json; charset=utf-8']);
+            }
 
-            $user->setEmail($resultJson["username"]);
+            $user->setName($resultJson["name"]);
+            $user->setEmail($resultJson["email"]);
             $user->setPassword(
                 $userPasswordHasher->hashPassword(
                     $user,
@@ -42,6 +46,9 @@ class UserController extends AbstractController
                 )
             );
             $user->setRoles($resultJson["roles"]);
+            $user->setActivated(true);
+            $user->setCreatedAt(new \DateTimeImmutable('now'));
+            $user->setLastLoginAt(new \DateTimeImmutable('now'));
 
             $userFound = $entityManager->getRepository(User::class)->findUserByEmail($user->getEmail());
             if ( $userFound !== [] ) {
