@@ -64,6 +64,34 @@ class UserController extends AbstractController
         }
     }
 
+    #[Route('/user/:id', name: 'korv_user_put', methods: 'PUT')]
+    public function putUser(Request $request, EntityManagerInterface $entityManager, int $id): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $user = $entityManager->getRepository(User::class)->find($id);
+        if (empty($user)) {
+            return $this->json(['status' => '404', 'message' => 'O usuário informado não existe.'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+
+        $requestJSON = json_decode($request->getContent(), true);
+        if ( count($requestJSON) < 3 ) {
+            return $this->json(['status' => '422', 'message' => 'Erro ao modificar esse usuário.'], 422, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+
+        $user->setName($requestJSON["name"]);
+        $user->setEmail($requestJSON["email"]);
+        $user->setRoles($requestJSON["roles"]);
+        $user->setActivated($requestJSON["activated"]);
+
+        $entityManager->flush();
+
+        return $this->json(['status' => '200', 'message' => 'Usuário atualizado com sucesso.'], 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
+
     #[Route('/users', name: 'korv_user_get', methods: 'GET')]
     public function getUsers(EntityManagerInterface $entityManager): Response
     {
