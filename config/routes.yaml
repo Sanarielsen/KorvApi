@@ -25,6 +25,16 @@ korv_user_register:
   controller: App\Controller\UserController::postRegister
   methods: POST
 
+korv_user_get:
+  path: /users
+  controller: App\Controller\UserController::getUsers
+  methods: GET
+
+korv_user_get_with_id:
+  path: /user/{id}
+  controller: App\Controller\UserController::getUserWithId
+  methods: GET
+
 korv_region_create:
   path: /region
   controller: App\Controller\RegionController::postRegion
