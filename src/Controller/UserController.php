@@ -63,4 +63,33 @@ class UserController extends AbstractController
             throw $this->createAccessDeniedException('Cannot create new user with current credentials');
         }
     }
+
+    #[Route('/users', name: 'korv_user_get', methods: 'GET')]
+    public function getUsers(EntityManagerInterface $entityManager): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $users = $entityManager->getRepository(User::class)->findAllUsersWithoutPassword();
+
+        return $this->json($users, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
+
+    #[Route('/user/:id', name: 'korv_user_get_with_id', methods: 'GET')]
+    public function getUserWithId(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $currentUser = $entityManager->getRepository(User::class)->findUserWithoutPassword($id)[0];
+        if (!$currentUser) {
+            return $this->json(['status' => '404', 'message' => 'O usuário informado não existe.'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+
+        return $this->json($currentUser, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
 }
