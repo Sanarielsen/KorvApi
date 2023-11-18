@@ -8,11 +8,18 @@ security:
         property: email
   firewalls:
     korv_login:
+      pattern: ^/login
+      stateless: true
       json_login:
         check_path: /login
+    api:
+      pattern: ^/
+      stateless: true
+      jwt:
+        ~
 
   access_control:
-    - { path: ^/login, roles: PUBLIC_ACCESS }
+    - { path: ^/login,           roles: PUBLIC_ACCESS }
     - { path: ^/user,            roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/user/:id,        roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/user/:id/status, roles: IS_AUTHENTICATED_FULLY }
