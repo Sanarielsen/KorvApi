@@ -70,4 +70,9 @@ korv_region_delete:
   controller: App\Controller\RegionController::deleteRegion
   methods: DELETE
 
+korv_local_create:
+  path: /local
+  controller: App\Controller\LocalController::postLocal
+  methods: POST
+
 
