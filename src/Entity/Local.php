@@ -22,6 +22,9 @@ class Local
     #[ORM\Column(length: 120, nullable: true)]
     private ?string $address = null;
 
+    #[ORM\ManyToOne(inversedBy: 'locals')]
+    private ?Region $region = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -66,6 +69,18 @@ class Local
     public function setAddress(?string $address): static
     {
         $this->address = $address;
+
+        return $this;
+    }
+
+    public function getRegion(): ?Region
+    {
+        return $this->region;
+    }
+
+    public function setRegion(?Region $region): static
+    {
+        $this->region = $region;
 
         return $this;
     }
