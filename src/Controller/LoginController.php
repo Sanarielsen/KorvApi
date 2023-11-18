@@ -41,14 +41,14 @@ class LoginController extends AbstractController
         if ($security->getUser() === null) {
             return $this->json([
                 'status' => 202,
-                'message' => "The application don't have user authenticated to logout.",
+                'message' => "A aplicação não possui um usuário para deslogar.",
             ], Response::HTTP_ACCEPTED);
         }
         $security->logout(false);
 
         return $this->json([
             'status' => 200,
-            'message' => "The current user has successfully logged out of the application.",
+            'message' => "O usuário atual foi deslogado com sucesso da aplicação.",
         ], Response::HTTP_OK);
     }
 }
