@@ -105,4 +105,23 @@ class LocalController extends AbstractController
 
         return $this->responseMessage->makeResponsePostMessage(200, 'Região atualizada com sucesso.');
     }
+
+    #[Route('/local/:id', name: 'korv_local_delete', methods: 'DELETE')]
+    public function deleteLocal(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $localToBeDeleted = $entityManager->getRepository(Local::class)->find($id);
+        if ( $localToBeDeleted === null ) {
+            return $this->responseMessage->makeResponsePostMessage(400, 'Não foi possível excluir esse local, porque o local informado não existe.');
+        }
+
+        $entityManager->remove($localToBeDeleted);
+        $entityManager->flush();
+
+        return $this->responseMessage->makeResponsePostMessage(200, 'Local excluído com sucesso.');
+    }
 }
