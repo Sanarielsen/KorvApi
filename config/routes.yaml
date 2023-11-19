@@ -95,4 +95,9 @@ korv_local_get_with_id:
   controller: App\Controller\LocalController::getLocalWithId
   methods: GET
 
+korv_sensor_create:
+  path: /sensor
+  controller: App\Controller\SensorController::postSensor
+  methods: POST
+
 
