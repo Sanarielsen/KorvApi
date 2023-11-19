@@ -80,4 +80,9 @@ korv_local_put:
   controller: App\Controller\LocalController::putLocal
   methods: PUT
 
+korv_local_delete:
+  path: /local/{id}
+  controller: App\Controller\LocalController::deleteLocal
+  methods: DELETE
+
 
