@@ -107,4 +107,23 @@ class SensorController extends AbstractController
 
         return $this->responseMessage->makeResponsePostMessage(200, 'Sensor atualizado com sucesso.');
     }
+
+    #[Route('/sensor/{id}', name: 'korv_sensor_delete', methods: 'DELETE')]
+    public function deleteSensor(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $sensorToBeDeleted = $entityManager->getRepository(Sensor::class)->find($id);
+        if ( $sensorToBeDeleted === null ) {
+            return $this->responseMessage->makeResponsePostMessage(400, 'Não foi possível excluir esse sensor, porque o sensor informado não existe.');
+        }
+
+        $entityManager->remove($sensorToBeDeleted);
+        $entityManager->flush();
+
+        return $this->responseMessage->makeResponsePostMessage(200, 'Sensor excluído com sucesso.');
+    }
 }

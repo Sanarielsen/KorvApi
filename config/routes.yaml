@@ -105,3 +105,8 @@ korv_sensor_put:
   controller: App\Controller\SensorController::putSensor
   methods: PUT
 
+korv_sensor_delete:
+  path: /sensor/{id}
+  controller: App\Controller\SensorController::deleteSensor
+  methods: DELETE
+
