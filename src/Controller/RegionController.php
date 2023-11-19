@@ -65,24 +65,20 @@ class RegionController extends AbstractController
         return $this->json(['status' => 200, 'message' => 'Região atualizada com sucesso.'], 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
 
-    #[Route('/region', name: 'korv_region_delete', methods: 'DELETE')]
-    public function deleteRegion(Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/region/{id}', name: 'korv_region_delete', methods: 'DELETE')]
+    public function deleteRegion(EntityManagerInterface $entityManager, int $id): Response
     {
         $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
         if ($accessResponse !== null) {
             return $accessResponse;
         }
 
-        $resultJson = json_decode($request->getContent(), true);
-        if ( !is_array($resultJson) ) {
-            return $this->json(['status' => 422, 'message' => 'Não foi possível excluir essa região, porque faltam informações para realizar a exclusão.'], 422, ['Content-Type'=>'application/json; charset=utf-8']);
-        }
-        $regionExists = $entityManager->getRepository(Region::class)->findOneByIdExists($resultJson["id"]);
+        $regionExists = $entityManager->getRepository(Region::class)->findOneByIdExists($id);
         if (!$regionExists) {
             return $this->json(['status' => 404, 'message' => 'Não foi possível excluir essa região, porque a região informada não existe.'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
         }
 
-        $region = $entityManager->getRepository(Region::class)->find($resultJson["id"]);
+        $region = $entityManager->getRepository(Region::class)->find($id);
 
         $entityManager->remove($region);
         $entityManager->flush();
@@ -98,7 +94,7 @@ class RegionController extends AbstractController
             return $accessResponse;
         }
 
-        $regions = $entityManager->getRepository(Region::class)->findAll();
+        $regions = $entityManager->getRepository(Region::class)->returnAllRegions();
 
         return $this->json($regions, 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
@@ -111,11 +107,11 @@ class RegionController extends AbstractController
             return $accessResponse;
         }
 
-        $currentRegion = $entityManager->getRepository(Region::class)->find($id);
+        $currentRegion = $entityManager->getRepository(Region::class)->findOneByIdExists($id);
         if (!$currentRegion) {
             return $this->json(['status' => 404, 'message' => 'Não foi possível visualizar essa região, porque a região informada não existe.'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
         }
 
-        return $this->json($currentRegion, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+        return $this->json($currentRegion[0], 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
 }
