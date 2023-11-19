@@ -151,6 +151,6 @@ class LocalController extends AbstractController
             return $this->json(['status' => 404, 'message' => 'Não foi possível visualizar este local, porque o local informado não existe.'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
         }
 
-        return $this->json($currentLocal, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+        return $this->json($currentLocal[0], 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
 }

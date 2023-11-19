@@ -66,7 +66,7 @@ korv_region_get_with_id:
   methods: GET
 
 korv_region_delete:
-  path: /region
+  path: /region/{id}
   controller: App\Controller\RegionController::deleteRegion
   methods: DELETE
 

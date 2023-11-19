@@ -27,9 +27,18 @@ class RegionRepository extends ServiceEntityRepository
     public function findOneByIdExists(int $id): array
     {
         return $this->createQueryBuilder('region')
+            ->select('region.id, region.name')
             ->andWhere('region.id = :id')
             ->setParameter('id', $id)
             ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function returnAllRegions() : array
+    {
+        return $this->createQueryBuilder('region')
+            ->select("region.id", "region.name")
             ->getQuery()
             ->getResult();
     }
