@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Local;
 use App\Entity\Region;
+use App\Entity\Sensor;
 use App\Shared\ResponseMessage;
 use App\Security\UserAuthenticatedVerifier;
 use App\Validations\RequestPropertiesValidation;
@@ -152,5 +153,26 @@ class LocalController extends AbstractController
         }
 
         return $this->json($currentLocal[0], 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
+
+    #[Route('/local/{id}/sensors', name: 'korv_local_get_with_sensors', methods: 'GET')]
+    public function getLocalWithSensors(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN', 'EMPLOYEE']);
+        if ($accessResponse) {
+            return $accessResponse;
+        }
+
+        $currentLocal = $entityManager->getRepository(Local::class)->findLocalById($id);
+        if ( count($currentLocal) < 1 ) {
+            return $this->responseMessage->makeResponsePostMessage(400, 'Não foi possível consultar os sensores desse local, porque o local informado não existe.');
+        }
+
+        $sensorsInsideOfLocal = $entityManager->getRepository(Sensor::class)->findSensorsByLocal($currentLocal[0]['id']);
+        if ( count($sensorsInsideOfLocal) < 1 ) {
+            return $this->responseMessage->makeResponsePostMessage(400, 'Não foi possível consultar os sensores desse local, porque não há sensores cadastrados nesse local.');
+        }
+
+        return $this->json(["local" => $currentLocal[0], "localSensors" => $sensorsInsideOfLocal], 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
 }

@@ -95,4 +95,38 @@ korv_local_get_with_id:
   controller: App\Controller\LocalController::getLocalWithId
   methods: GET
 
+korv_local_get_with_sensors:
+  path: /local/{id}/sensors
+  controller: App\Controller\LocalController::getLocalWithSensors
+  methods: GET
+
+korv_sensor_create:
+  path: /sensor
+  controller: App\Controller\SensorController::postSensor
+  methods: POST
+
+korv_sensor_put:
+  path: /sensor/{id}
+  controller: App\Controller\SensorController::putSensor
+  methods: PUT
+
+korv_sensor_delete:
+  path: /sensor/{id}
+  controller: App\Controller\SensorController::deleteSensor
+  methods: DELETE
+
+korv_sensor_get_with_id:
+  path: /sensor/{id}
+  controller: App\Controller\SensorController::getSensorWithId
+  methods: GET
+
+korv_sensor_get_inside_of_local:
+  path: /sensors/local/{id}
+  controller: App\Controller\SensorController::getSensorsInsideOfLocal
+  methods: GET
+
+korv_sensor_status_update:
+  path: /sensors/status/update
+  controller: App\Controller\SensorController::putRefreshStatusSensors
+  methods: PUT
 
