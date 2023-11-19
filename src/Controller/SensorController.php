@@ -126,4 +126,20 @@ class SensorController extends AbstractController
 
         return $this->responseMessage->makeResponsePostMessage(200, 'Sensor excluído com sucesso.');
     }
+
+    #[Route('/sensor/{id}', name: 'korv_sensor_get_with_id', methods: 'GET')]
+    public function getSensorWithId(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN', 'EMPLOYEE']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $currentSensor = $entityManager->getRepository(Sensor::class)->findSensorById($id);
+        if (!$currentSensor) {
+            return $this->json(['status' => 404, 'message' => 'Não foi possível visualizar este local, porque o local informado não existe.'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+
+        return $this->json($currentSensor[0], 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
 }
