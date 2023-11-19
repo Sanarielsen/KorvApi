@@ -64,4 +64,47 @@ class SensorController extends AbstractController
 
         return $this->responseMessage->makeResponsePostMessage(200, 'Sensor cadastrado com sucesso.');
     }
+
+    #[Route('/sensor/{id}', name: 'korv_sensor_put', methods: 'PUT')]
+    public function putSensor(Request $request, EntityManagerInterface $entityManager, int $id): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $requestJSON = json_decode($request->getContent(), true);
+        if ($requestJSON === null) {
+            return $this->responseMessage->makeResponsePostMessage(442, 'Não foi possível atualizar esse sensor, porque é necessário enviar um payload para essa requisição.');
+        }
+        if ( count($requestJSON) < 5 ) {
+            return $this->responseMessage->makeResponsePostMessage(442, 'Não foi possível atualizar esse sensor, porque faltou algumas informações nesse envio.');
+        }
+
+        $sensorCurrent = new Sensor();
+        $hasCorrectRequest = $this->propertiesValidation->isBothHasTheSameProperties($sensorCurrent, $requestJSON, ['id']);
+        if (!$hasCorrectRequest) {
+            return $this->responseMessage->makeResponsePostMessage(442, 'Não foi possível atualizar esse sensor, porque envio das informações dessa rota está incorreta.');
+        }
+
+        $sensorCurrent = $entityManager->getRepository(Sensor::class)->find($id);
+        if ( $sensorCurrent === null ) {
+            return $this->responseMessage->makeResponsePostMessage(400, 'Não foi possível atualizar esse sensor, porque o sensor informado não existe.');
+        }
+
+        $localRefer = $entityManager->getRepository(Local::class)->find($requestJSON['local']);
+        if ( $localRefer === null ) {
+            return $this->responseMessage->makeResponsePostMessage(400, 'Não foi possível atualizar esse sensor, porque o local informado não existe.');
+        }
+
+        $sensorCurrent->setName($requestJSON['name']);
+        $sensorCurrent->setType($requestJSON['type']);
+        $sensorCurrent->setStatus($requestJSON['status']);
+        $sensorCurrent->setIsActivated($requestJSON['isActivated']);
+        $sensorCurrent->setLocal($localRefer);
+
+        $entityManager->flush();
+
+        return $this->responseMessage->makeResponsePostMessage(200, 'Sensor atualizado com sucesso.');
+    }
 }

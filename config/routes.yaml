@@ -100,4 +100,8 @@ korv_sensor_create:
   controller: App\Controller\SensorController::postSensor
   methods: POST
 
+korv_sensor_put:
+  path: /sensor/{id}
+  controller: App\Controller\SensorController::putSensor
+  methods: PUT
 
