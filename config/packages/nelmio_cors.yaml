@@ -74,3 +74,10 @@ nelmio_cors:
             allow_methods: [ 'POST' ]
             max_age: 3600
             hosts: [ '^api\.' ]
+        '^/local/{id}':
+            origin_regex: true
+            allow_origin: [ '%env(CORS_ALLOW_ORIGIN)%' ]
+            allow_headers: [ 'X-Custom-Auth' ]
+            allow_methods: [ 'PUT' ]
+            max_age: 3600
+            hosts: [ '^api\.' ]

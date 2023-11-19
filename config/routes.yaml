@@ -75,4 +75,9 @@ korv_local_create:
   controller: App\Controller\LocalController::postLocal
   methods: POST
 
+korv_local_put:
+  path: /local/{id}
+  controller: App\Controller\LocalController::putLocal
+  methods: PUT
+
 
