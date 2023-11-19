@@ -28,3 +28,4 @@ security:
     - { path: ^/region/:id,      roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/regions,         roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/local,           roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/local/:id,       roles: IS_AUTHENTICATED_FULLY }
