@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\LocalRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: LocalRepository::class)]
@@ -24,6 +26,14 @@ class Local
 
     #[ORM\ManyToOne(inversedBy: 'locals')]
     private ?Region $region = null;
+
+    #[ORM\OneToMany(mappedBy: 'local', targetEntity: Sensor::class, orphanRemoval: true)]
+    private Collection $sensors;
+
+    public function __construct()
+    {
+        $this->sensors = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -81,6 +91,36 @@ class Local
     public function setRegion(?Region $region): static
     {
         $this->region = $region;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Sensor>
+     */
+    public function getSensors(): Collection
+    {
+        return $this->sensors;
+    }
+
+    public function addSensor(Sensor $sensor): static
+    {
+        if (!$this->sensors->contains($sensor)) {
+            $this->sensors->add($sensor);
+            $sensor->setLocal($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSensor(Sensor $sensor): static
+    {
+        if ($this->sensors->removeElement($sensor)) {
+            // set the owning side to null (unless already changed)
+            if ($sensor->getLocal() === $this) {
+                $sensor->setLocal(null);
+            }
+        }
 
         return $this;
     }
