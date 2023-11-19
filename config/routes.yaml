@@ -110,3 +110,7 @@ korv_sensor_delete:
   controller: App\Controller\SensorController::deleteSensor
   methods: DELETE
 
+korv_sensor_get_with_id:
+  path: /sensor/{id}
+  controller: App\Controller\SensorController::getSensorWithId
+  methods: GET

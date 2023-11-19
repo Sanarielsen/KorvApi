@@ -21,6 +21,16 @@ class SensorRepository extends ServiceEntityRepository
         parent::__construct($registry, Sensor::class);
     }
 
+    public function findSensorById(int $id)
+    {
+        return $this->createQueryBuilder('sensor')
+            ->select('sensor.id, sensor.name, sensor.type, sensor.status, sensor.isActivated')
+            ->AndWhere('sensor.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Sensor[] Returns an array of Sensor objects
 //     */
