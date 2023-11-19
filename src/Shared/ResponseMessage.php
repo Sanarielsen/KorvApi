@@ -8,8 +8,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 
 class ResponseMessage
 {
-    public function makeResponsePostMessage(string $code, string $context): mixed
+    public function makeResponsePostMessage(string $code, string $message): mixed
     {
-        return new JsonResponse(['status' => $code, 'message' => $context], $code, ['Content-Type'=>'application/json; charset=utf-8']);
+        return new JsonResponse(['status' => $code, 'message' => $message], $code, ['Content-Type'=>'application/json; charset=utf-8']);
     }
 }

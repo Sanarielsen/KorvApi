@@ -85,4 +85,14 @@ korv_local_delete:
   controller: App\Controller\LocalController::deleteLocal
   methods: DELETE
 
+korv_local_get:
+  path: /locals
+  controller: App\Controller\LocalController::getLocals
+  methods: GET
+
+korv_local_get_with_id:
+  path: /local/{id}
+  controller: App\Controller\LocalController::getLocalWithId
+  methods: GET
+
 

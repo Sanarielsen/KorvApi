@@ -124,4 +124,33 @@ class LocalController extends AbstractController
 
         return $this->responseMessage->makeResponsePostMessage(200, 'Local excluído com sucesso.');
     }
+
+    #[Route('/locals', name: 'korv_local_get', methods: 'GET')]
+    public function getLocals(EntityManagerInterface $entityManager): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN', 'EMPLOYEE']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $locals = $entityManager->getRepository(Local::class)->findAllLocals();
+
+        return $this->json($locals, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
+
+    #[Route('/locals', name: 'korv_local_get_with_id', methods: 'GET')]
+    public function getLocalWithId(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN', 'EMPLOYEE']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $currentLocal = $entityManager->getRepository(Local::class)->findLocalById($id);
+        if (!$currentLocal) {
+            return $this->json(['status' => 404, 'message' => 'Não foi possível visualizar este local, porque o local informado não existe.'], 404, ['Content-Type'=>'application/json; charset=utf-8']);
+        }
+
+        return $this->json($currentLocal, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
 }

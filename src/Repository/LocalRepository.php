@@ -21,6 +21,24 @@ class LocalRepository extends ServiceEntityRepository
         parent::__construct($registry, Local::class);
     }
 
+    public function findLocalById(int $id)
+    {
+        return $this->createQueryBuilder('local')
+            ->select('local.id, local.name, local.type, local.address')
+            ->AndWhere('local.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findAllLocals()
+    {
+        return $this->createQueryBuilder('local')
+            ->select('local.id, local.name, local.type, local.address')
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Local[] Returns an array of Local objects
 //     */

@@ -29,3 +29,4 @@ security:
     - { path: ^/regions,         roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/local,           roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/local/:id,       roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/locals,          roles: IS_AUTHENTICATED_FULLY }
