@@ -120,3 +120,8 @@ korv_sensor_get_with_id:
   controller: App\Controller\SensorController::getSensorWithId
   methods: GET
 
+korv_sensor_get_inside_of_local:
+  path: /sensors/local/{id}
+  controller: App\Controller\SensorController::getSensorsInsideOfLocal
+  methods: GET
+
