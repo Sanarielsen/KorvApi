@@ -125,3 +125,8 @@ korv_sensor_get_inside_of_local:
   controller: App\Controller\SensorController::getSensorsInsideOfLocal
   methods: GET
 
+korv_sensor_status_update:
+  path: /sensors/status/update
+  controller: App\Controller\SensorController::putRefreshStatusSensors
+  methods: PUT
+

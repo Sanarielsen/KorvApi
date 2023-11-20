@@ -6,6 +6,8 @@ use App\Repository\LocalRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ConnectException;
 
 #[ORM\Entity(repositoryClass: LocalRepository::class)]
 class Local
@@ -123,5 +125,20 @@ class Local
         }
 
         return $this;
+    }
+
+    public function updateSensorStatus(string $addressController): mixed
+    {
+        try {
+            $url = 'http://'. $addressController . '/all';
+
+            $client = new Client();
+            $res = $client->request('GET', $url);
+
+            return json_decode($res->getBody(), true);
+        } catch (ConnectException $exception) {
+
+            return null;
+        }
     }
 }

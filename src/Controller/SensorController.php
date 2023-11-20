@@ -163,4 +163,41 @@ class SensorController extends AbstractController
 
         return $this->json($sensorsInsideOfLocal, 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
+
+    #[Route('/sensors/status/update', name: 'korv_local_put_sensors_refresh', methods: 'PUT')]
+    public function putRefreshStatusSensors(EntityManagerInterface $entityManager): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN', 'EMPLOYEE']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $listLocal = $entityManager->getRepository(Local::class)->findAll();
+        foreach ( $listLocal as $local )
+        {
+            $whichTypeSensorIsUsed = $entityManager->getRepository(Sensor::class)->findWhichTypeSensorIsCreatedByLocal(1);
+            if ( count($whichTypeSensorIsUsed) > 0 ) {
+
+                $newStatus = $local->updateSensorStatus($local->getAddress());
+                if ( $newStatus === null ) {
+                    continue;
+                }
+
+                foreach ( $whichTypeSensorIsUsed as $typeSensor ) {
+
+                    $sensorSpecific = $entityManager->getRepository(Sensor::class)->findSensorTypeByLocal($local->getId(), $typeSensor["type"]);
+                    if ($sensorSpecific !== null) {
+                        $sensor = $entityManager->getRepository(Sensor::class)->find($sensorSpecific['id']);
+                        $statusBoolean = boolval($newStatus["sensors"][$typeSensor["type"]]);
+                        if ( $sensor->isStatus() !== $statusBoolean ) {
+                            $sensor->setStatus($statusBoolean);
+                            $entityManager->flush();
+                        }
+                    }
+                }
+            }
+        }
+
+        return $this->responseMessage->makeResponsePostMessage(200, 'Sensores atualizados com sucesso.');
+    }
 }
