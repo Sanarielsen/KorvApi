@@ -33,3 +33,4 @@ security:
     - { path: ^/locals,               roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/sensor,               roles: IS_AUTHENTICATED_FULLY }
     - { path: ^/sensor/:id,           roles: IS_AUTHENTICATED_FULLY }
+    - { path: ^/sensors/local/:id,    roles: IS_AUTHENTICATED_FULLY }
