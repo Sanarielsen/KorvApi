@@ -95,6 +95,13 @@ nelmio_cors:
             allow_methods: [ 'GET' ]
             max_age: 3600
             hosts: [ '^api\.' ]
+        '^/locals/dashboard':
+            origin_regex: true
+            allow_origin: [ '%env(CORS_ALLOW_ORIGIN)%' ]
+            allow_headers: [ 'X-Custom-Auth' ]
+            allow_methods: [ 'GET' ]
+            max_age: 3600
+            hosts: [ '^api\.' ]
         '^/sensor/':
             origin_regex: true
             allow_origin: [ '%env(CORS_ALLOW_ORIGIN)%' ]

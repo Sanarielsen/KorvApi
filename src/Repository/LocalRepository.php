@@ -34,7 +34,7 @@ class LocalRepository extends ServiceEntityRepository
     public function findAllLocals()
     {
         return $this->createQueryBuilder('local')
-            ->select('local.id, local.name, local.type, local.address')
+            ->select('local.id, local.name, local.type, local.address, IDENTITY(local.region) as regionId')
             ->getQuery()
             ->getResult();
     }

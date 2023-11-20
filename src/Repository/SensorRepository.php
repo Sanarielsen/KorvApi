@@ -41,6 +41,16 @@ class SensorRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    public function findSensorByLocalId(int $idLocal): array|null
+    {
+        return $this->createQueryBuilder('sensor')
+            ->select('sensor.id, sensor.name, sensor.type, sensor.status, sensor.isActivated, IDENTITY(sensor.local) as localId')
+            ->andWhere('IDENTITY(sensor.local) = :localId')
+            ->setParameter('localId', $idLocal)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findSensorTypeByLocal(int $idLocal, string $typeSensor): array|null
     {
         return $this->createQueryBuilder('sensor')

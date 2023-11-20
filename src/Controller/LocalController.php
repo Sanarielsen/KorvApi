@@ -5,8 +5,9 @@ namespace App\Controller;
 use App\Entity\Local;
 use App\Entity\Region;
 use App\Entity\Sensor;
-use App\Shared\ResponseMessage;
 use App\Security\UserAuthenticatedVerifier;
+use App\Shared\DashboardResultLocals;
+use App\Shared\ResponseMessage;
 use App\Validations\RequestPropertiesValidation;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -175,4 +176,33 @@ class LocalController extends AbstractController
 
         return $this->json(["local" => $currentLocal[0], "localSensors" => $sensorsInsideOfLocal], 200, ['Content-Type'=>'application/json; charset=utf-8']);
     }
+
+    #[Route('/locals/dashboard', name: 'korv_locals_with_sensors_and_regions', methods: 'GET')]
+    public function getLocalsWithSensorsAndRegions(EntityManagerInterface $entityManager): Response
+    {
+        $accessResponse = $this->userAuthenticatedVerifier->getHasAccessInCurrentRoute(['KORV_ADMIN', 'EMPLOYEE']);
+        if ($accessResponse !== null) {
+            return $accessResponse;
+        }
+
+        $locals = $entityManager->getRepository(Local::class)->findAllLocals();
+        $listLocals = [];
+        $localCount = 0;
+        foreach ( $locals as $currentLocal ) {
+
+            $region = $entityManager->getRepository(Region::class)->findOneByIdExists($currentLocal["regionId"]);
+            $sensors = $entityManager->getRepository(Sensor::class)->findSensorByLocalId($currentLocal["id"]);
+            $result = new DashboardResultLocals();
+            $result->setIdLocal($currentLocal["id"]);
+            $result->setNameLocal($currentLocal["name"]);
+            $result->setRegionId($region[0]["id"]);
+            $result->setSensors($sensors);
+            $listLocals[$localCount] = $result;
+            $localCount++;
+        }
+
+        return $this->json($listLocals, 200, ['Content-Type'=>'application/json; charset=utf-8']);
+    }
+
+
 }
