@@ -90,6 +90,11 @@ korv_local_get:
   controller: App\Controller\LocalController::getLocals
   methods: GET
 
+korv_locals_with_sensors_and_regions:
+  path: /locals/dashboard
+  controller: App\Controller\LocalController::getLocalsWithSensorsAndRegions
+  methods: GET
+
 korv_local_get_with_id:
   path: /local/{id}
   controller: App\Controller\LocalController::getLocalWithId
@@ -129,4 +134,3 @@ korv_sensor_status_update:
   path: /sensors/status/update
   controller: App\Controller\SensorController::putRefreshStatusSensors
   methods: PUT
-
