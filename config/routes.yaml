@@ -95,6 +95,11 @@ korv_local_get_with_id:
   controller: App\Controller\LocalController::getLocalWithId
   methods: GET
 
+korv_local_get_with_sensors:
+  path: /local/{id}/sensors
+  controller: App\Controller\LocalController::getLocalWithSensors
+  methods: GET
+
 korv_sensor_create:
   path: /sensor
   controller: App\Controller\SensorController::postSensor
@@ -114,3 +119,4 @@ korv_sensor_get_with_id:
   path: /sensor/{id}
   controller: App\Controller\SensorController::getSensorWithId
   methods: GET
+

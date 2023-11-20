@@ -31,28 +31,13 @@ class SensorRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-//    /**
-//     * @return Sensor[] Returns an array of Sensor objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('s.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
-
-//    public function findOneBySomeField($value): ?Sensor
-//    {
-//        return $this->createQueryBuilder('s')
-//            ->andWhere('s.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+    public function findSensorsByLocal(int $idLocal): array
+    {
+        return $this->createQueryBuilder('sensor')
+            ->select('sensor.id, sensor.name, sensor.type, sensor.status, sensor.isActivated')
+            ->andWhere('sensor.local = :localId')
+            ->setParameter('localId', $idLocal)
+            ->getQuery()
+            ->getResult();
+    }
 }
